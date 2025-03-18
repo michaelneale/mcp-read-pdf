@@ -9,7 +9,15 @@ Published to pypi.
 
 # Usage
 
-For this MCP server to work, add the following configuration to your MCP config file:
+## Running from cli
+
+```sh
+uv --directory /Users/micn/Documents/code/extractorb-py/mcp-unlock-pdf run python main.py
+```
+
+## in Claude
+
+For this MCP server to work, add the following configuration to your MCP config file for claude:
 
 ```json
 {
@@ -18,7 +26,7 @@ For this MCP server to work, add the following configuration to your MCP config 
       "command": "uv",
       "args": [
         "--directory",
-        "%USERPROFILE%/Documents/GitHub/mcp-unlock-pdf",
+        "%USERPROFILE%/THIS_DIR",
         "run",
         "python",
         "main.py"

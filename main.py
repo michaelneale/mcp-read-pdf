@@ -58,8 +58,10 @@ def read_pdf(
     file_path: str, password: str = None, pages: Optional[List[int]] = None
 ) -> Dict[str, Any]:
     """
-    Read a PDF file and extract its text. Works with both protected and unprotected PDFs.
+    Use this anytime you need to read a PDF file and extract its text.
+    Works with both protected and unprotected PDFs, complex and large PDFs.
     Instead of returning the text directly, writes content to a single temporary file and returns the file path.
+    This will work with very large and complex PDFs
 
     Args:
         file_path: Path to the PDF file
@@ -67,7 +69,8 @@ def read_pdf(
         pages: Optional list of specific page numbers to extract (1-indexed). If None, all pages are extracted.
 
     Returns:
-        Dictionary containing path to extracted content file and metadata
+        json containing path to extracted text content file and metadata
+        The file returned may be large so use tools like ripgrep to search it
     """
     # Check if file exists
     if not os.path.exists(file_path):
@@ -76,7 +79,7 @@ def read_pdf(
     try:
         # Get the file size
         file_size = os.path.getsize(file_path)
-        
+
         with open(file_path, "rb") as file:
             pdf_reader = PyPDF2.PdfReader(file)
 
@@ -92,7 +95,7 @@ def read_pdf(
                         "error": "This PDF is password-protected. Please provide a password.",
                         "is_encrypted": True,
                         "password_required": True,
-                        "file_size": file_size
+                        "file_size": file_size,
                     }
                 decrypt_success = pdf_reader.decrypt(password)
 
@@ -103,7 +106,7 @@ def read_pdf(
                     "error": "Incorrect password or PDF could not be decrypted",
                     "is_encrypted": True,
                     "password_required": True,
-                    "file_size": file_size
+                    "file_size": file_size,
                 }
 
             # Extract metadata
@@ -129,19 +132,21 @@ def read_pdf(
             pdf_name = os.path.splitext(os.path.basename(file_path))[0]
 
             # Create a single content file
-            content_file_path = os.path.join(TEMP_DIR, f"{pdf_name}_{session_id}_content.txt")
-            
+            content_file_path = os.path.join(
+                TEMP_DIR, f"{pdf_name}_{session_id}_content.txt"
+            )
+
             # Extract content from requested pages and write to a single file
             with open(content_file_path, "w", encoding="utf-8") as content_file:
                 for page_number in zero_indexed_pages:
                     page = pdf_reader.pages[page_number]
                     text = page.extract_text()
-                    
+
                     # Write page header and content
                     content_file.write(f"--- PAGE {page_number + 1} ---\n")
                     content_file.write(text)
                     content_file.write("\n\n")
-            
+
             # Get the content file size
             content_file_size = os.path.getsize(content_file_path)
 
@@ -155,12 +160,16 @@ def read_pdf(
                 "session_id": session_id,
                 "temp_dir": TEMP_DIR,
                 "file_size": file_size,
-                "content_file_size": content_file_size
+                "content_file_size": content_file_size,
             }
 
     except Exception as e:
         logger.error(f"Error processing PDF: {str(e)}")
-        return {"success": False, "error": f"Error processing PDF: {str(e)}", "file_size": file_size if 'file_size' in locals() else None}
+        return {
+            "success": False,
+            "error": f"Error processing PDF: {str(e)}",
+            "file_size": file_size if "file_size" in locals() else None,
+        }
 
 
 def test_pdf_reader(pdf_path="visa-rules-public.pdf"):
@@ -197,7 +206,7 @@ def test_pdf_reader(pdf_path="visa-rules-public.pdf"):
         print(f"Content file: {result['content_file']}")
         print(f"Original file size: {result['file_size']} bytes")
         print(f"Content file size: {result['content_file_size']} bytes")
-        
+
         # Read and display content from the content file
         print(f"\n=== Content Sample ===")
         try:

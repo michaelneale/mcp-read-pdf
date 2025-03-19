@@ -7,6 +7,14 @@ Forked from the excellent upstream project https://github.com/algonacci/mcp-unlo
 
 Published to pypi.
 
+# Usage
+
+```sh
+uvx mcp-read-pdf
+```
+
+Will run from pypi. This can be used in `goose` or `claude`.
+
 # Test
 
 ```sh
@@ -19,27 +27,6 @@ uv run python main.py --test
 
 ```sh
 uv --directory /Users/micn/Documents/code/extractorb-py/mcp-unlock-pdf run python main.py
-```
-
-## in Claude
-
-For this MCP server to work, add the following configuration to your MCP config file for claude:
-
-```json
-{
-  "mcpServers": {
-    "unlock_pdf": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "%USERPROFILE%/THIS_DIR",
-        "run",
-        "python",
-        "main.py"
-      ]
-    }
-  }
-}
 ```
 
 ### Building and Publishing

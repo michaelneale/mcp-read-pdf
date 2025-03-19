@@ -223,7 +223,8 @@ def test_pdf_reader(pdf_path="visa-rules-public.pdf"):
         return False
 
 
-if __name__ == "__main__":
+def main():
+    """Entry point for the package when installed via pip."""
     import sys
 
     # Check if we should run in test mode
@@ -242,3 +243,6 @@ if __name__ == "__main__":
         # Normal MCP server mode
         logger.info("Starting MCP server...")
         mcp.run()
+
+if __name__ == "__main__":
+    main()

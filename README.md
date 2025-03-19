@@ -7,6 +7,12 @@ Forked from the excellent upstream project https://github.com/algonacci/mcp-unlo
 
 Published to pypi.
 
+# Test
+
+```sh
+uv run python main.py --test
+```
+
 # Usage
 
 ## Running from cli

@@ -154,7 +154,6 @@ def read_pdf(
                 "success": True,
                 "is_encrypted": is_encrypted,
                 "total_pages": total_pages,
-                "extracted_pages": [p + 1 for p in zero_indexed_pages],
                 "metadata": metadata,
                 "content_file": content_file_path,
                 "session_id": session_id,
@@ -230,7 +229,7 @@ if __name__ == "__main__":
     # Check if we should run in test mode
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
         # Test mode with optional PDF path
-        pdf_path = sys.argv[2] if len(sys.argv) > 2 else "visa-rules-public.pdf"
+        pdf_path = sys.argv[2] if len(sys.argv) > 2 else "dummy.pdf"
         test_pdf_reader(pdf_path)
 
         # Additionally, show what the raw tool call output looks like

@@ -1,7 +1,7 @@
 [project]
 name = "mcp-read-pdf"
 version = "0.1.0"
-description = "PDF reader extension for MCP that can unlock password-protected PDFs"
+description = "PDF reader extension for MCP that can work with large PDFs and password protected."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

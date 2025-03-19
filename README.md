@@ -13,9 +13,9 @@ Published to pypi.
 uv run python main.py --test
 ```
 
-# Usage
+# Usage from source
 
-## Running from cli
+## Running from cli (Goose, or to try it)
 
 ```sh
 uv --directory /Users/micn/Documents/code/extractorb-py/mcp-unlock-pdf run python main.py
@@ -40,4 +40,37 @@ For this MCP server to work, add the following configuration to your MCP config 
     }
   }
 }
+```
+
+### Building and Publishing
+
+1. Update version in `pyproject.toml`:
+
+```toml
+[project]
+version = "x.y.z"  # Update this
+```
+
+2. Build the package:
+
+```bash
+# Clean previous builds
+rm -rf dist/*
+
+
+# Or build in a clean environment using uv
+uv venv .venv
+source .venv/bin/activate
+uv pip install build
+python -m build
+```
+
+3. Publish to PyPI:
+
+```bash
+# Install twine if needed
+uv pip install twine
+
+# Upload to PyPI
+python -m twine upload dist/*
 ```

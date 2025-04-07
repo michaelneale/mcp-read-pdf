@@ -16,7 +16,13 @@ logger = logging.getLogger(__name__)
 
 logger.info("Starting PDF Reader MCP server...")
 
-mcp = FastMCP("PDF Reader", dependencies=["PyPDF2>=3.0.0"])
+instructions ="""The PDF Reader allows you to read PDFs on the local filesystem.
+It supports password-protected and unprotected PDFs.
+
+Ensure that you always use an absolute path for file_path when calling read_pdf.
+"""
+
+mcp = FastMCP("PDF Reader", instructions=instructions,dependencies=["PyPDF2>=3.0.0"])
 
 # Create a temporary directory for storing extracted page content
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "pdf_reader_extracts")
@@ -64,7 +70,7 @@ def read_pdf(
     This will work with very large and complex PDFs
 
     Args:
-        file_path: Path to the PDF file
+        file_path: Path to the PDF file, this MUST be an absolute path on the filesystem.
         password: Optional password to decrypt the PDF if it's protected
         pages: Optional list of specific page numbers to extract (1-indexed). If None, all pages are extracted.
 
@@ -72,6 +78,10 @@ def read_pdf(
         json containing path to extracted text content file and metadata
         The file returned may be large so use tools like ripgrep to search it
     """
+    # Check if file path is absolute
+    if not os.path.isabs(file_path):
+        return {"success": False, "error": f"File path MUST be absolute: {file_path}"}
+
     # Check if file exists
     if not os.path.exists(file_path):
         return {"success": False, "error": f"File not found: {file_path}"}

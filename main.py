@@ -1,4 +1,7 @@
-from mcp.server.fastmcp import FastMCP
+try:
+    from mcp.server.mcpserver import MCPServer
+except ImportError:
+    from mcp.server.fastmcp import FastMCP as MCPServer
 import os
 import PyPDF2
 from typing import Dict, List, Optional, Any
@@ -22,7 +25,7 @@ It supports password-protected and unprotected PDFs.
 Ensure that you always use an absolute path for file_path when calling read_pdf.
 """
 
-mcp = FastMCP("PDF Reader", instructions=instructions,dependencies=["PyPDF2>=3.0.0"])
+mcp = MCPServer("PDF Reader", instructions=instructions)
 
 # Create a temporary directory for storing extracted page content
 TEMP_DIR = os.path.join(tempfile.gettempdir(), "pdf_reader_extracts")
